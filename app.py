@@ -1,43 +1,38 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, render_template, request, redirect, url_for
+import api
 
 app = Flask(__name__)
 
-data = {}
-
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    items = api.get_projects()
+    return render_template("index.html", items=items)
 
-@app.route('/create', methods=['POST'])
+@app.route("/create", methods=["GET", "POST"])
 def create():
-    item_id = request.form['id']
-    data[item_id] = {'id': item_id, 'name': request.form['name']}
-    return jsonify(data[item_id])
+    if request.method == "POST":
+        name = request.form["name"]
+        description = request.form["description"]
+        api.add_project(name, description)
+        return redirect(url_for("index"))
+    return render_template("create.html")
 
-@app.route('/update', methods=['POST'])
-def update():
-    item_id = request.form['id']
-    if item_id in data:
-        data[item_id]['name'] = request.form['name']
-        return jsonify(data[item_id])
-    return jsonify({'error': 'Item not found'}), 404
+@app.route("/update/<int:project_id>", methods=["GET", "POST"])
+def update(project_id):
+    item = api.get_project(project_id)
+    if not item:
+        return "Item not found", 404
+    if request.method == "POST":
+        name = request.form["name"]
+        description = request.form["description"]
+        api.update_project(project_id, name, description)
+        return redirect(url_for("index"))
+    return render_template("update.html", item=item)
 
-@app.route('/read', methods=['GET'])
-def read():
-    item_id = request.args.get('id')
-    return jsonify(data.get(item_id, {}))
+@app.route("/delete/<int:project_id>", methods=["POST"])
+def delete(project_id):
+    api.delete_project(project_id)
+    return redirect(url_for("index"))
 
-@app.route('/delete', methods=['POST'])
-def delete():
-    item_id = request.form['id']
-    if item_id in data:
-        del data[item_id]
-        return jsonify({}), 204
-    return jsonify({'error': 'Item not found'}), 404
-
-@app.route('/all', methods=['GET'])
-def show_all():
-    return jsonify(data)
-
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    app.run(debug=True)

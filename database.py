@@ -14,7 +14,8 @@ def initialize_db():
         cursor.executescript("""
             CREATE TABLE IF NOT EXISTS Projects (
                 project_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL
+                name TEXT NOT NULL,
+                description TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS Workers (
                 worker_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,10 +49,10 @@ def populate_db():
         cursor.executescript("""
 
             -- Insert a few projects
-            INSERT INTO Projects (name) VALUES ('Nieve');
-            INSERT INTO Projects (name) VALUES ('Playa');
-            INSERT INTO Projects (name) VALUES ('Coche');
-            INSERT INTO Projects (name) VALUES ('Casa');
+            INSERT INTO Projects (name, description) VALUES ('Nieve', 'Más Nieve');
+            INSERT INTO Projects (name, description) VALUES ('Playa', 'Sol');
+            INSERT INTO Projects (name, description) VALUES ('Coche', 'Conducir');
+            INSERT INTO Projects (name, description) VALUES ('Casa', 'Cocinar');
 
             -- Insert workers
             INSERT INTO Workers (name) VALUES ('Anselmo');

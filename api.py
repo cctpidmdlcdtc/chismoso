@@ -25,21 +25,21 @@ def get_project(project_id: int):
         return dict(project)
 
 @hug.post('/projects')
-def add_project(name: str):
+def add_project(name: str, description: str):
     """Adds a new project"""
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO Projects (name) VALUES (?)", (name,))
+        cursor.execute("INSERT INTO Projects (name, description) VALUES (?, ?)", (name, description))
         conn.commit()
-        return {"project_id": cursor.lastrowid, "name": name}
+        return {"project_id": cursor.lastrowid, "name": name, "description": description}
 
 @hug.put('/projects/{project_id}')
-def update_project(project_id: int, name: str):
+def update_project(project_id: int, name: str, description: str):
     """Updates an existing project"""
     with get_db_connection() as conn:
-        conn.execute("UPDATE Projects SET name = ? WHERE project_id = ?", (name, project_id))
+        conn.execute("UPDATE Projects SET name = ?, description = ? WHERE project_id = ?", (name, description, project_id))
         conn.commit()
-        return {"status": "project updated", "project_id": project_id, "name": name}
+        return {"status": "project updated", "project_id": project_id, "name": name, "description": description}
 
 @hug.delete('/projects/{project_id}')
 def delete_project(project_id: int):
