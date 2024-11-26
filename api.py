@@ -34,12 +34,26 @@ def add_project(name: str, description: str):
         return {"project_id": cursor.lastrowid, "name": name, "description": description}
 
 @hug.put('/projects/{project_id}')
-def update_project(project_id: int, name: str, description: str):
+def update_project(project_id: int, name: str, description: str, start_date: str, end_date: str):
     """Updates an existing project"""
     with get_db_connection() as conn:
-        conn.execute("UPDATE Projects SET name = ?, description = ? WHERE project_id = ?", (name, description, project_id))
+        conn.execute("""
+            UPDATE Projects
+            SET name = ?,
+                description = ?, 
+                start_date = ?, 
+                end_date = ?
+            WHERE project_id = ?
+        """, (name, description, start_date, end_date, project_id))
         conn.commit()
-        return {"status": "project updated", "project_id": project_id, "name": name, "description": description}
+        return {
+            "status": "project updated",
+            "project_id": project_id,
+            "name": name,
+            "description": description,
+            "start_date": start_date,
+            "end_date": end_date
+        }
 
 @hug.delete('/projects/{project_id}')
 def delete_project(project_id: int):

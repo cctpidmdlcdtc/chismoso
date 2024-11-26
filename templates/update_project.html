@@ -7,8 +7,29 @@
 <form method="post">
     <label for="name">Nombre:</label>
     <input type="text" name="name" id="name" value="{{ item.name }}" required>
+    
     <label for="description">Descripción:</label>
     <textarea name="description" id="description" required>{{ item.description }}</textarea>
+    
+    <label for="start_date">Fecha de inicio:</label>
+    <input type="date" name="start_date" id="start_date" value="{{ item.start_date }}" required>
+    
+    <label for="end_date">Fecha de fin:</label>
+    <input type="date" name="end_date" id="end_date" value="{{ item.end_date }}" required>
+    
+    <label for="worker">Asignar trabajador:</label>
+    <select name="worker" id="worker" required>
+        {% for worker in workers %}
+        <option value="{{ worker.worker_id }}" {% if worker.worker_id == item.project_id %}selected{% endif %}>
+            {{ worker.name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    {% for worker in workers %}
+    {{ worker }}
+    {% endfor %}
+    
     <button type="submit">Actualizar</button>
     <a href="{{ url_for('index') }}" class="cancel-button">Cancelar</a>
 </form>

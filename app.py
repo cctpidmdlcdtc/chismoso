@@ -22,13 +22,30 @@ def add_project():
 def update_project(project_id):
     item = api.get_project(project_id)
     if not item:
-        return "Item not found", 404
+        return "Project not found", 404
+    workers = api.get_workers()  # Obtener la lista de trabajadores para el selector.
+    if not workers:
+        return "No workers found", 404
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
-        api.update_project(project_id, name, description)
+        start_date = request.form["start_date"]
+        end_date = request.form["end_date"]
+        print(f"\n\n\n{request.form['worker']}")
+        
+        worker_value = request.form.get("worker")
+        if not worker_value or not worker_value.isdigit():
+            return f"Valor inválido para 'worker': '{worker_value}'"
+        try:
+            worker_id = int(worker_value)
+            return f"{worker_id}"
+        except ValueError:
+            return f"Error al convertir 'worker' a int. Valor recibido: '{worker_value}'"
+        
+        #worker_id = int(request.form["worker"])  # Convertir el ID del trabajador seleccionado a entero.
+        api.update_project(project_id, name, description, start_date, end_date)
         return redirect(url_for("index"))
-    return render_template("update_project.html", item=item)
+    return render_template("update_project.html", item=item, workers=workers)
 
 @app.route("/delete_project/<int:project_id>", methods=["POST"])
 def delete_project(project_id):
@@ -54,7 +71,7 @@ def add_worker():
 def update_worker(worker_id):
     item = api.get_worker(worker_id)
     if not item:
-        return "Item not found", 404
+        return "Worker not found", 404
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]

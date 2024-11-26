@@ -15,7 +15,9 @@ def initialize_db():
             CREATE TABLE IF NOT EXISTS Projects (
                 project_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                description TEXT NOT NULL
+                description TEXT NOT NULL,
+                start_date TEXT,
+                end_date TEXT
             );
             CREATE TABLE IF NOT EXISTS Workers (
                 worker_id INTEGER PRIMARY KEY AUTOINCREMENT,
