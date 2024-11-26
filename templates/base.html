@@ -8,11 +8,14 @@
 </head>
 <body>
     <header>
+    {% block header %}
         <h1>Proyectos</h1>
         <nav>
-            <a href="{{ url_for('index') }}">Inicio</a>
-            <a href="{{ url_for('add_project') }}">Crear</a>
+            <a href="{{ url_for('index_workers') }}">Mostrar empleados</a>
+            <a href="{{ url_for('index') }}">Mostrar proyectos</a>
+            <a href="{{ url_for('add_project') }}">Crear proyecto</a>
         </nav>
+    {% endblock %}
     </header>
     <main>
         {% block content %}{% endblock %}

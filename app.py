@@ -50,7 +50,7 @@ def add_worker():
         return redirect(url_for("index_workers"))
     return render_template("add_worker.html")
 
-@app.route("/update/<int:worker_id>", methods=["GET", "POST"])
+@app.route("/update_worker/<int:worker_id>", methods=["GET", "POST"])
 def update_worker(worker_id):
     item = api.get_worker(worker_id)
     if not item:
@@ -62,7 +62,7 @@ def update_worker(worker_id):
         return redirect(url_for("index_workers"))
     return render_template("update_worker.html", item=item)
 
-@app.route("/delete/<int:worker_id>", methods=["POST"])
+@app.route("/delete_worker/<int:worker_id>", methods=["POST"])
 def delete_worker(worker_id):
     api.delete_worker(worker_id)
     return redirect(url_for("index_workers"))

@@ -2,6 +2,15 @@
 
 {% block title %}Actualizar empleado{% endblock %}
 
+{% block header %}
+<h1>Empleados</h1>
+<nav>
+    <a href="{{ url_for('index') }}">Mostrar proyectos</a>
+    <a href="{{ url_for('index_workers') }}">Mostrar empleados</a>
+    <a href="{{ url_for('add_worker') }}">Crear empleado</a>
+</nav>
+{% endblock %}
+
 {% block content %}
 <h2>Actualizar empleado</h2>
 <form method="post">

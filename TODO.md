@@ -7,5 +7,3 @@ POST	|	Crear un nuevo recurso	|	No	|	Sí	|	Crear un usuario
 PUT	|	Actualizar/crear un recurso	|	Sí	|	Sí	|	Actualizar datos de un usuario
 DELETE	|	Eliminar un recurso	|	Sí	|	No	|	Eliminar un usuario
 
-
-- dentro de workers debe ofrecer añadir workers, no proyectos
