@@ -20,6 +20,7 @@ def initialize_db():
             CREATE TABLE IF NOT EXISTS Workers (
                 worker_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
+                description TEXT NOT NULL,
                 max_daily_hours INTEGER DEFAULT 8,
                 max_weekly_hours INTEGER DEFAULT 40
             );
@@ -55,14 +56,14 @@ def populate_db():
             INSERT INTO Projects (name, description) VALUES ('Casa', 'Cocinar');
 
             -- Insert workers
-            INSERT INTO Workers (name) VALUES ('Anselmo');
-            INSERT INTO Workers (name) VALUES ('Baldomero');
-            INSERT INTO Workers (name) VALUES ('Clodomiro');
-            INSERT INTO Workers (name) VALUES ('Doroteo');
+            INSERT INTO Workers (name, description) VALUES ('Anselmo', '');
+            INSERT INTO Workers (name, description) VALUES ('Baldomero', '');
+            INSERT INTO Workers (name, description) VALUES ('Clodomiro', '');
+            INSERT INTO Workers (name, description) VALUES ('Doroteo', '');
 
             -- Insert managers
-            INSERT INTO Workers (name) VALUES ('Plácido');
-            INSERT INTO Workers (name) VALUES ('Olegario');
+            INSERT INTO Workers (name, description) VALUES ('Plácido', '');
+            INSERT INTO Workers (name, description) VALUES ('Olegario', '');
 
             -- Insert initial roles
             INSERT INTO Roles (name) VALUES 

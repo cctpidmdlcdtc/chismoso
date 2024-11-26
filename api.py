@@ -65,19 +65,19 @@ def get_worker(worker_id: int):
         return dict(worker)
 
 @hug.post('/workers')
-def add_worker(name: str, max_daily_hours: int = 8, max_weekly_hours: int = 40):
+def add_worker(name: str, description: str, max_daily_hours: int = 8, max_weekly_hours: int = 40):
     """Adds a new worker"""
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO workers (name, max_daily_hours, max_weekly_hours) VALUES (?, ?, ?)",
-            (name, max_daily_hours, max_weekly_hours),
+            "INSERT INTO workers (name, description, max_daily_hours, max_weekly_hours) VALUES (?, ?, ?, ?)",
+            (name, description, max_daily_hours, max_weekly_hours),
         )
         conn.commit()
         return {"worker_id": cursor.lastrowid, "name": name}
 
 @hug.put('/workers/{worker_id}')
-def update_worker(worker_id: int, name: str = None, max_daily_hours: int = None, max_weekly_hours: int = None):
+def update_worker(worker_id: int, name: str = None, description: str = None, max_daily_hours: int = None, max_weekly_hours: int = None):
     """Updates a worker by their ID"""
     with get_db_connection() as conn:
         # Retrieve existing worker record
@@ -90,6 +90,9 @@ def update_worker(worker_id: int, name: str = None, max_daily_hours: int = None,
         if name is not None:
             fields.append("name = ?")
             values.append(name)
+        if description is not None:
+            fields.append("description = ?")
+            values.append(description)
         if max_daily_hours is not None:
             fields.append("max_daily_hours = ?")
             values.append(max_daily_hours)
@@ -125,3 +128,39 @@ def get_worker_hours():
     with get_db_connection() as conn:
         hours = conn.execute("SELECT * FROM worker_Hours").fetchall()
         return [dict(hour) for hour in hours]
+
+
+worker_role = """
+SELECT 
+    c.nombre AS currito,
+    r.nombre AS rol
+FROM 
+    Horas_Currito hc
+JOIN 
+    Curritos c ON hc.id_currito = c.id_currito
+JOIN 
+    Roles r ON hc.id_rol = r.id_rol
+WHERE 
+    hc.id_proyecto = 4
+    AND hc.fecha = "2024-11-20";
+"""
+
+worked_hours = """
+SELECT 
+    c.nombre AS currito,
+    p.nombre AS proyecto,
+    r.nombre AS rol,
+    hc.fecha,
+    (c.max_horas_diarias * hc.porcentaje_disponibilidad) AS horas_trabajadas
+FROM 
+    Horas_Currito hc
+JOIN 
+    Curritos c ON hc.id_currito = c.id_currito
+JOIN 
+    Proyectos p ON hc.id_proyecto = p.id_proyecto
+JOIN 
+    Roles r ON hc.id_rol = r.id_rol
+WHERE 
+    hc.id_currito = 4
+    AND hc.fecha = "2024-11-20";
+"""

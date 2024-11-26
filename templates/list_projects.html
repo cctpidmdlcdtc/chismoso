@@ -3,7 +3,7 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-<h2>Lista de Items</h2>
+<h2>Lista de proyectos</h2>
 <table>
     <thead>
         <tr>
@@ -18,8 +18,8 @@
             <td>{{ item.name }}</td>
             <td>{{ item.description }}</td>
             <td>
-                <a href="{{ url_for('update', project_id=item.project_id) }}">Editar</a>
-                <form action="{{ url_for('delete', project_id=item.project_id) }}" method="post" style="display:inline;">
+                <a href="{{ url_for('update_project', project_id=item.project_id) }}">Editar</a>
+                <form action="{{ url_for('delete_project', project_id=item.project_id) }}" method="post" style="display:inline;">
                     <button type="submit">Eliminar</button>
                 </form>
             </td>
