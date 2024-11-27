@@ -15,9 +15,9 @@
 <h2>Actualizar empleado</h2>
 <form method="post">
     <label for="name">Nombre:</label>
-    <input type="text" name="name" id="name" value="{{ item.name }}" required>
+    <input type="text" name="name" id="name" value="{{ worker.name }}" required>
     <label for="description">Descripción:</label>
-    <textarea name="description" id="description" required>{{ item.description }}</textarea>
+    <textarea name="description" id="description" required>{{ worker.description }}</textarea>
     <button type="submit">Actualizar</button>
     <a href="{{ url_for('index_workers') }}" class="cancel-button">Cancelar</a>
 </form>
