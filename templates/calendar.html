@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario</title>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+</head>
+<body>
+    <div id="calendar"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth', // Vista inicial (mes)
+                locale: 'es',               // Idioma
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay' // Opciones de vista
+                },
+                events: '/calendar_events', // Endpoint para cargar eventos
+                eventClick: function(info) {
+                    // Obtener el título del evento
+                    var eventTitle = info.event.title;
+
+                    // Crear la URL de búsqueda en Google
+                    var googleSearchURL = '/edit?q=' + encodeURIComponent(eventTitle);
+
+                    // Redirigir a la búsqueda de Google
+                    window.open(googleSearchURL, '_blank');
+                },
+                dateClick: function(info) {
+                    // Verificamos si el día tiene eventos
+                    var date = info.dateStr;  // Obtener la fecha seleccionada
+                    var hasEvents = false;
+
+                    // Recorrer los eventos cargados para ver si hay alguno en ese día
+                    calendar.getEvents().forEach(function(event) {
+                        if (event.startStr.startsWith(date)) {
+                            hasEvents = true;  // Si hay eventos, cambiamos la variable
+                        }
+                    });
+
+                    // Si no hay eventos en la fecha seleccionada, redirigimos a YouTube
+                    if (!hasEvents) {
+                        window.location.href = '/add?q=' + encodeURIComponent(date);
+                    } else {
+                        // Si hay eventos y no se ha hecho clic en ninguno, redirigimos a una página de eventos del día
+                        window.location.href = '/add?q=' + encodeURIComponent(date);
+                    }
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+</body>
+</html>

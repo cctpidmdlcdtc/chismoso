@@ -1,3 +1,31 @@
+app.py
+- falta el availability_percentage antes de insertar
+- insertar
+- comprobar si salen
+
+SELECT 
+    w.name AS worker,
+    r.name AS role
+FROM 
+    Worker_Hours wh
+JOIN 
+    Workers w ON wh.worker_id = w.worker_id
+JOIN 
+    Roles r ON wh.role_id = r.role_id
+WHERE 
+    wh.date = "2024-11-11";
+
+
+- mostrar workers añadidos dentro del proyecto
+
+
+
+
+
+
+
+
+
 - sqlalchemy y wtforms
 
 - add_project

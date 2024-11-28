@@ -63,7 +63,7 @@ def delete_project(project_id: int):
         conn.commit()
         return {"status": "project deleted", "project_id": project_id}
 
-# CRUD for workers
+# CRUD for Workers
 @hug.get('/workers')
 def get_workers():
     """Retrieves all workers"""
@@ -121,6 +121,19 @@ def update_worker(worker_id: int, name: str = None, description: str = None, max
         
         return {"success": True, "updated_fields": fields}
 
+# CRUD for Roles
+@hug.get('/roles')
+def get_roles():
+    """Retrieves all roles"""
+    with get_db_connection() as conn:
+        roles = conn.execute("SELECT * FROM Roles").fetchall()
+        return [dict(role) for role in roles]
+
+
+
+
+
+
 # worker Hours Registration
 @hug.post('/worker_hours')
 def register_hours(worker_id: int, project_id: int, role_id: int, date: str, availability_percentage: float = 1.0):
@@ -128,7 +141,7 @@ def register_hours(worker_id: int, project_id: int, role_id: int, date: str, ava
     with get_db_connection() as conn:
         try:
             conn.execute(
-                "INSERT INTO worker_Hours (worker_id, project_id, id_role, date, availability_percentage) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO worker_Hours (worker_id, project_id, role_id, date, availability_percentage) VALUES (?, ?, ?, ?, ?)",
                 (worker_id, project_id, role_id, date, availability_percentage),
             )
             conn.commit()
@@ -144,37 +157,69 @@ def get_worker_hours():
         return [dict(hour) for hour in hours]
 
 
+
+
+
+
+
+@hug.get('/calendar_events')
+def calendar_events():
+    """Retrieves all workers working"""
+    with get_db_connection() as conn:
+        workers_working = conn.execute("""
+            SELECT 
+                w.name AS worker,
+                p.name AS project,
+                r.name AS role,
+                wh.date,
+                (w.max_daily_hours * wh.availability_percentage) AS worked_hours
+            FROM 
+                Worker_Hours wh
+            JOIN 
+                Workers w ON wh.worker_id = w.worker_id
+            JOIN 
+                Projects p ON wh.project_id = p.project_id
+            JOIN 
+                Roles r ON wh.role_id = r.role_id
+            ORDER BY WH.date
+        """).fetchall()
+        return [dict(worker_working) for worker_working in workers_working]
+
+
+ 
+    
+
 worker_role = """
 SELECT 
-    c.nombre AS currito,
-    r.nombre AS rol
+    w.name AS worker,
+    r.name AS role
 FROM 
-    Horas_Currito hc
+    Worker_Hours wh
 JOIN 
-    Curritos c ON hc.id_currito = c.id_currito
+    Workers w ON wh.worker_id = w.worker_id
 JOIN 
-    Roles r ON hc.id_rol = r.id_rol
+    Roles r ON wh.role_id = r.role_id
 WHERE 
-    hc.id_proyecto = 4
-    AND hc.fecha = "2024-11-20";
+    wh.project_id = 4
+    AND wh.date = "2024-11-20";
 """
 
 worked_hours = """
 SELECT 
-    c.nombre AS currito,
-    p.nombre AS proyecto,
-    r.nombre AS rol,
-    hc.fecha,
-    (c.max_horas_diarias * hc.porcentaje_disponibilidad) AS horas_trabajadas
+    w.name AS worker,
+    p.name AS project,
+    r.name AS role,
+    wh.date,
+    (w.max_daily_hours * wh.availability_percentage) AS worked_hours
 FROM 
-    Horas_Currito hc
+    Worker_Hours wh
 JOIN 
-    Curritos c ON hc.id_currito = c.id_currito
+    Workers w ON wh.worker_id = w.worker_id
 JOIN 
-    Proyectos p ON hc.id_proyecto = p.id_proyecto
+    Projects p ON wh.project_id = p.project_id
 JOIN 
-    Roles r ON hc.id_rol = r.id_rol
+    Roles r ON wh.role_id = r.role_id
 WHERE 
-    hc.id_currito = 4
-    AND hc.fecha = "2024-11-20";
+    wh.worker_id = 4
+    AND wh.date = "2024-11-20";
 """

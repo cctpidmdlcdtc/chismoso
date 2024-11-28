@@ -31,12 +31,9 @@
             </tr>
         </tbody>
     </table>
-    {% for worker in workers %}
-    {{ worker }}
-    {% endfor %}
     <!-- Botones de Acción -->
     <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <button type="submit" name="update_project" ="btn btn-primary">Actualizar</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
     </div>
 </form>
@@ -62,6 +59,19 @@
                     </select>
                 </td>
             </tr>
+            <!-- Fila para Asignar rol -->
+            <tr>
+                <td><label for="role">Asignar trabajador:</label></td>
+                <td>
+                    <select name="role" id="role" class="form-control" required>
+                        {% for role in roles %}
+                        <option value="{{ role.role_id }}" {% if role.role_id == project.project_id %}selected{% endif %}>
+                            {{ role.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
             <!-- Fila para Fecha de inicio -->
             <tr>
                 <td><label for="start_date">Fecha de inicio:</label></td>
@@ -74,12 +84,9 @@
             </tr>
         </tbody>
     </table>
-    {% for worker in workers %}
-    {{ worker }}
-    {% endfor %}
     <!-- Botones de Acción -->
     <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <button type="submit" name="add_worker" class="btn btn-primary">Actualizar</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
     </div>
 </form>
